@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+
+
+    <script>
+        app.factory('leadFactory', function ($http) {
+            url += 'lead/';
+            return {
+                getModel: function () {
+                    if (getParameterByName('showDiscontinued') == 'true')
+                        return $http.get(url + '?showDiscontinued=True');
+                    return $http.get(url);
+                },
+                addModel: function (lead) {
+                    return $http.post(url, lead);
+                },
+                deleteModel: function (lead) {
+                    return $http.delete(url + lead.LeadID);
+                },
+                updateModel: function (lead) {
+                    return $http.put(url + lead.LeadID, lead);
+                },
+
+            };
+        });
+
+        app.controller('leadController', function PostsController($scope, leadFactory) {
+            $scope.myModelS = [];
+            $scope.totalDisplayed = 10;
+            $scope.loading = true;
+            $scope.addMode = true;
+
+            $scope.toggleEdit = function () {
+                this.lead.editMode = !this.lead.editMode;
+            };
+            $scope.toggleAdd = function () {
+                $scope.addMode = !$scope.addMode;
+            };
+            $scope.save = function () {
+                $scope.loading = true;
+                var thisModel = this.lead;
+                leadFactory.updateModel(thisModel).success(function (data) {
+                    $scope.addAlert('success', 'Saved Successfully!', 5000);
+                    thisModel.editMode = false;
+                    $scope.loading = false;
+                }).error(function (data) {
+                    $scope.addAlert('danger', 'An Error has occured while Saving data! ' + data.ExceptionMessage);
+                    $scope.loading = false;
+                });
+            };
+
+            // add Data
+            $scope.add = function () {
+                $scope.loading = true;
+                leadFactory.addModel(this.newModel).success(function (data) {
+                    $scope.addAlert('success', 'Added Successfully!', 5000);
+                    $scope.myModelS.push(data);
+                    $scope.loading = false;
+                }).error(function (data) {
+                    $scope.addAlert('danger', 'An Error has occured while Adding data! ' + data.ExceptionMessage);
+                    $scope.loading = false;
+                });
+                this.newModel = null;
+            };
+
+            // delete Data
+            $scope.delete = function () {
+                var result = confirm("Are you sure?");
+                if (result == true) {
+                    $scope.loading = true;
+                    var currentModel = this.lead;
+                    //alert(currentModel. LeadID);
+                    leadFactory.deleteModel(currentModel).success(function (data) {
+                        $scope.addAlert('warning', 'Deleted Successfully!', 5000);
+                        $.each($scope.myModelS, function (i) {
+                            if ($scope.myModelS[i].LeadID === currentModel.LeadID) {
+                                $scope.myModelS.splice(i, 1);
+                                return false;
+                            }
+                        });
+                        $scope.loading = false;
+                    }).error(function (data) {
+                        $scope.addAlert('danger', 'An Error has occured while Saving data! ' + data.ExceptionMessage);
+                        $scope.loading = false;
+                    });
+                }
+            };
+
+            //get all Data
+            $scope.loadData = function () {
+                leadFactory.getModel().success(function (data) {
+                    $scope.myModelS = data;
+                    $scope.loading = false;
+                    $scope.newModel = null;
+                })
+                .error(function (data) {
+                    $scope.addAlert('danger', 'An Error has occured while Loading data! ' + data.ExceptionMessage);
+                    $scope.loading = false;
+                });
+            };
+
+            $scope.loadMore = function () {
+                $scope.totalDisplayed += 10;
+            };
+
+            $scope.reset = function () {
+                $scope.$broadcast('show-errors-reset');
+                $scope.newModel = null;
+            }
+
+        });
+
+    </script>
+</body>
+</html>

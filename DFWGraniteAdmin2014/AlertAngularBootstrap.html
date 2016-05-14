@@ -1,0 +1,395 @@
+<!doctype html>
+<html ng-app="myNgApp">
+  <head>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.10/angular.js"></script>
+    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>
+      <!-- Bootstrap Core CSS -->
+      <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+
+      <!-- GOOGLE FONT -->
+      <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+      <!-- jQuery Version 1.11.0 -->
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+  </head>
+  <body>
+
+<div ng-controller="AlertDemoCtrl">
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="page-header" style="margin-top:5px;">Miscellaneous Setup</h2>
+        </div>
+    </div>
+
+    <div class="row  pad-top">
+        <div class="col-md-12" data-ng-app="myNgApp">
+            <div ng-controller="AlertDemoCtrl">
+                <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+                <button class='btn btn-default' ng-click="addAlert('warning','Error ko bau!')">Add Alert</button>
+            </div>
+
+            <div class="panel-group" id="accordion">
+                <div id="panelOne" class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="col-xs-10">
+                            <h4 class="panel-title panel-title-adjust">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="collapsed center-block">
+                                    <i class="fa fa-plus"></i>Edges
+                                </a>
+                            </h4>
+                        </div>
+                        <div class="col-xs-2 pull-right">
+                            <span class="pull-right"><button runat="server" class="btnShowModal btn btn-sm btn-primary panelOnebtnAdd" data-toggle="modal" data-target="#OptionModal" data-backdrop="static" data-keyboard="false">Add</button></span>
+                        </div>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse" style="height: 0px;">
+                        <div class="panel-body">
+
+                        </div>
+                    </div>
+                </div>
+                <div id="panelTwo" class="panel panel-success" data-ng-controller="myController">
+                    <div class="panel-heading">
+                        <div class="col-xs-10">
+                            <h4 class="panel-title panel-title-adjust">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="collapsed" data-ng-click="loadData()">
+                                    <i class="fa fa-plus"></i>Leads
+                                </a>
+                            </h4>
+                        </div>
+                        <div class="col-xs-2 pull-right">
+                            <span class="pull-right"><button runat="server" class="btnShowModal btn btn-sm btn-success panelTwobtnAdd" data-toggle="modal" data-target="#addLeadModal" data-backdrop="static" data-keyboard="false">Add</button></span>
+                        </div>
+
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse" style="height: 0px;">
+                        <div class="panel-body">
+                            <div>
+
+                                <div id="mydiv" data-ng-show="loading">
+                                    <img src="/admin2014/Images/ajax_loader.gif" class="ajax-loader" />
+                                </div>
+
+                                <div class="modal fade" id="addLeadModal" tabindex="-1" role="dialog" aria-labelledby="addLeadModal" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <ng-form id="test" name="test">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                    <h4 class="modal-title">Chart Option</h4>
+                                                </div>
+                                                <div class="modal-body" ng-class="{'has-error': test.$invalid && test.Description.$dirty }">
+                                                    <label>Name:</label><input type="text" name="LeadName" data-ng-model="newModel.LeadName" required class="form-control" />
+                                                    <span class="help-block error" ng-show="test.LeadName.$error.required">Required</span>
+                                                    <label>Email:</label><input type="email" name="Description" data-ng-model="newModel.Description" required class="form-control" />
+                                                    <br />
+                                                    <span class="error" data-ng-show="test.Description.$error.email">Invalid Email format!</span>
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a data-dismiss="modal" class="btn btn-default">Cancel</a>
+                                                    <a data-ng-click="add()" data-ng-disabled="!test.$valid" class="closeModal btn btn-primary">Submit</a>
+
+                                                </div>
+                                            </ng-form>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-condensed">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Lead</th>
+                                        <th>Description</th>
+                                        <th>Inactive</th>
+                                        <th style="width:10%;min-width:20px;">Action</th>
+                                    </tr>
+
+                                    <tr data-ng-repeat="lead in myModelS | filter:search">
+                                        <td>
+                                            <strong data-ng-hide="lead.editMode">{{ lead.LeadID }}</strong>
+                                        </td>
+                                        <td>
+                                            <p data-ng-hide="lead.editMode">{{ lead.LeadName }}</p>
+                                            <p data-ng-show="lead.editMode">
+                                                <input type="text" data-ng-model="lead.LeadName" />
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <p data-ng-hide="lead.editMode">{{ lead.Description }}</p>
+                                            <input data-ng-show="lead.editMode" type="text" data-ng-model="lead.Description" />
+                                        </td>
+                                        <td>
+                                            <p data-ng-hide="lead.editMode"><input type="checkbox" data-ng-model="lead.Inactive" ng-true-value='True' ng-false-value='False' disabled /></p>
+                                            <p data-ng-show="lead.editMode">
+                                                <input type="checkbox" data-ng-model="lead.Inactive" ng-true-value='True' ng-false-value='False' />
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <p data-ng-hide="lead.editMode"><a data-ng-click="toggleEdit(lead)" href="javascript:;"><span class="glyphicon glyphicon-pencil col-sm-8"></span></a> | <a data-ng-click="delete(lead)" href="javascript:;"><span class="glyphicon glyphicon-trash"></span></a></p>
+                                            <p data-ng-show="lead.editMode"><a data-ng-click="save(lead)" href="javascript:;"><span class="glyphicon glyphicon-ok col-sm-8"></span></a> | <a data-ng-click="toggleEdit(lead)" href="javascript:;"><span class="glyphicon glyphicon-remove-sign"></span></a></p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div id="panelThree" class="panel panel-danger">
+                    <div class="panel-heading">
+                        <div class="col-xs-10">
+                            <h4 class="panel-title panel-title-adjust">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" class="collapsed">
+                                    <i class="fa fa-plus"></i>Measurement Assets
+                                </a>
+                            </h4>
+                        </div>
+                        <div class="col-xs-2 pull-right">
+                            <span class="pull-right"><button runat="server" class="btnShowModal btn btn-sm btn-danger panelThreebtnAdd" data-toggle="modal" data-target="#OptionModal" data-backdrop="static" data-keyboard="false">Add</button></span>
+                        </div>
+                    </div>
+                    <div id="collapseThree" class="panel-collapse collapse" style="height: 0px;">
+                        <div class="panel-body">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                            Vivamus sagittis egestas mauris ut vehicula. Cras viverra ac orci ac aliquam.
+                            Nulla eget condimentum mauris, eget tincidunt est. Quisque in luctus ligula.
+                            Aenean eget ligula id nulla ornare placerat vel a nulla.
+                            Duis lobortis purus auctor eros rhoncus, sed tempor est molestie.
+                            Nulla eget condimentum mauris, eget tincidunt est. Quisque in luctus ligula.
+                            Aenean eget ligula id nulla ornare placerat vel a nulla.
+                            Duis lobortis purus auctor eros rhoncus, sed tempor est molestie.
+                        </div>
+                    </div>
+                </div>
+                <div id="panelFour" class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="col-xs-10">
+                            <h4 class="panel-title panel-title-adjust">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapsefour" class="collapsed">
+                                    <i class="fa fa-plus"></i>Salesmen
+                                </a>
+                            </h4>
+                        </div>
+                        <div class="col-xs-2 pull-right">
+                            <span class="pull-right"><button runat="server" class="btnShowModal btn btn-sm btn-default panelFourbtnAdd" data-toggle="modal" data-target="#OptionModal" data-backdrop="static" data-keyboard="false">Add</button></span>
+                        </div>
+                    </div>
+                    <div id="collapsefour" class="panel-collapse collapse" style="height: 0px;">
+                        <div class="panel-body">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                            Vivamus sagittis egestas mauris ut vehicula. Cras viverra ac orci ac aliquam.
+                            Nulla eget condimentum mauris, eget tincidunt est. Quisque in luctus ligula.
+                            Aenean eget ligula id nulla ornare placerat vel a nulla.
+                            Duis lobortis purus auctor eros rhoncus, sed tempor est molestie.
+                            Nulla eget condimentum mauris, eget tincidunt est. Quisque in luctus ligula.
+                            Aenean eget ligula id nulla ornare placerat vel a nulla.
+                            Duis lobortis purus auctor eros rhoncus, sed tempor est molestie.
+                        </div>
+                    </div>
+                </div>
+                <div id="panelFive" class="panel panel-warning">
+                    <div class="panel-heading">
+                        <div class="col-xs-10">
+                            <h4 class="panel-title panel-title-adjust">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapsefive" class="collapsed">
+                                    <i class="fa fa-plus"></i>Assigned To's
+                                </a>
+                            </h4>
+                        </div>
+                        <div class="col-xs-2 pull-right">
+                            <span class="pull-right"><button runat="server" class="btnShowModal btn btn-sm btn-warning panelFivebtnAdd" data-toggle="modal" data-target="#OptionModal" data-backdrop="static" data-keyboard="false">Add</button></span>
+                        </div>
+                    </div>
+                    <div id="collapsefive" class="panel-collapse collapse" style="height: 0px;">
+                        <div class="panel-body">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                            Vivamus sagittis egestas mauris ut vehicula. Cras viverra ac orci ac aliquam.
+                            Nulla eget condimentum mauris, eget tincidunt est. Quisque in luctus ligula.
+                            Aenean eget ligula id nulla ornare placerat vel a nulla.
+                            Duis lobortis purus auctor eros rhoncus, sed tempor est molestie.
+                            Nulla eget condimentum mauris, eget tincidunt est. Quisque in luctus ligula.
+                            Aenean eget ligula id nulla ornare placerat vel a nulla.
+                            Duis lobortis purus auctor eros rhoncus, sed tempor est molestie.
+                        </div>
+                    </div>
+                </div>
+                <div id="panelSix" class="panel panel-info">
+                    <div class="panel-heading">
+                        <div class="col-xs-10">
+                            <h4 class="panel-title panel-title-adjust">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapsesix" class="collapsed">
+                                    <i class="fa fa-plus"></i>Email Notifications
+                                </a>
+                            </h4>
+                        </div>
+                        <div class="col-xs-2 pull-right">
+                            <span class="pull-right"><button runat="server" class="btnShowModal btn btn-sm btn-info panelSixbtnAdd" data-toggle="modal" data-target="#OptionModal" data-backdrop="static" data-keyboard="false">Add</button></span>
+                        </div>
+                    </div>
+                    <div id="collapsesix" class="panel-collapse collapse" style="height: 0px;">
+                        <div class="panel-body">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="products"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <script type='text/javascript'>
+        $('.btnShowModal').hide();
+        $(window).load(function () {
+            $('.panel').on('show.bs.collapse', function (e) {
+                $('.' + e.currentTarget.id + 'btnAdd').fadeIn('slow');
+            })
+            $('.panel').on('hide.bs.collapse', function (e) {
+                $('.' + e.currentTarget.id + 'btnAdd').hide('slow');
+            })
+        });
+
+        $('.closeModal').click(function () {
+            $('.modal').modal('hide');
+        });
+
+    </script>
+
+    <script>
+        angular.module('myNgApp', ['ui.bootstrap']);
+        function AlertDemoCtrl($scope) {
+            $scope.alerts = [];
+
+            $scope.addAlert = function (aType, aMsg) {
+                $scope.alerts.push({ type: aType, msg: aMsg });
+            };
+
+            $scope.closeAlert = function (index) {
+                $scope.alerts.splice(index, 1);
+            };
+        }
+    </script>
+
+    <script>
+        var app = angular.module('myNgApp', []);
+        var url = 'http://www.granitesouthlake.com/WebApiDFW/api/lead/';
+
+        app.factory('myFactory', function ($http) {
+            return {
+                getModel: function () {
+                    return $http.get(url);
+                },
+                addModel: function (lead) {
+                    return $http.post(url, lead);
+                },
+                deleteModel: function (lead) {
+                    return $http.delete(url + lead.LeadID);
+                },
+                updateModel: function (lead) {
+                    return $http.put(url + lead.LeadID, lead);
+                }
+            };
+        });
+
+        app.controller('myController', function PostsController($scope, myFactory) {
+            $scope.myModelS = [];
+            $scope.loading = true;
+            $scope.addMode = true;
+
+            $scope.toggleEdit = function () {
+                this.lead.editMode = !this.lead.editMode;
+            };
+            $scope.toggleAdd = function () {
+                $scope.addMode = !$scope.addMode;
+            };
+            $scope.save = function () {
+                $scope.loading = true;
+                var thisModel = this.lead;
+                myFactory.updateModel(thisModel).success(function (data) {
+                    //alert("Saved Successfully!!");
+                    addAlert('success', "Saved Successfully! ")
+                    thisModel.editMode = false;
+                    $scope.loading = false;
+                }).error(function (data) {
+                    $scope.error = "An Error has occured while Saving data! " + data.ExceptionMessage;
+                    //addAlert('success', "An Error has occured while Saving data! " + data.ExceptionMessage)
+                    $scope.loading = false;
+
+                });
+            };
+
+            // add Data
+            $scope.add = function () {
+                $scope.loading = true;
+                myFactory.addModel(this.newModel).success(function (data) {
+                    //alert("Added Successfully!!");
+                    //$scope.addMode = false;
+                    $scope.myModelS.push(data);
+                    $scope.loading = false;
+                }).error(function (data) {
+                    $scope.error = "An Error has occured while Adding data! " + data.ExceptionMessage;
+                    $scope.loading = false;
+
+                });
+            };
+
+            // delete Data
+            $scope.delete = function () {
+                var result = confirm("Are you sure?");
+                if (result == true) {
+                    $scope.loading = true;
+                    var currentModel = this.lead;
+                    //alert(currentModel.LeadID);
+                    myFactory.deleteModel(currentModel).success(function (data) {
+                        //alert("Deleted Successfully!! " + currentModel.LeadID);
+                        $.each($scope.myModelS, function (i) {
+                            if ($scope.myModelS[i].LeadID === currentModel.LeadID) {
+                                $scope.myModelS.splice(i, 1);
+                                return false;
+                            }
+                        });
+                        $scope.loading = false;
+                    }).error(function (data) {
+                        $scope.error = "An Error has occured while Saving data! " + data.ExceptionMessage;
+                        $scope.loading = false;
+                    });
+                }
+            };
+
+            //get all Data
+            $scope.loadData = function () {
+                myFactory.getModel().success(function (data) {
+                    $scope.myModelS = data;
+                    $scope.loading = false;
+                })
+                .error(function (data) {
+                    $scope.error = "An Error has occured while Loading data! " + data.ExceptionMessage;
+                    $scope.loading = false;
+                });
+            };
+
+        });
+    </script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <!-- jQuery UI -->
+    <script type="text/javascript" src="//code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+
+  </body>
+</html>

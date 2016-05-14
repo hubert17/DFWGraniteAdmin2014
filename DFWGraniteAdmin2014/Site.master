@@ -1,0 +1,395 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="Site" %>
+<%@ Register TagPrefix="UC" TagName="UserLog" Src="~/UserControl/UserLog.ascx" %>
+<%@ Register TagPrefix="UCBS" TagName="UserLogBS" Src="~/UserControl/UserLogBS.ascx" %>
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" >
+<head runat="server">
+    <meta name="robots" content="noindex" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <title><%: Page.Title %> | DFW Wholesale Granite Webapp</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+    <!-- GOOGLE FONT -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    <!-- jQuery Version 1.11.0 -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            padding-top: 70px;
+            /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+        }
+       
+        footer {
+            padding: 30px 0;
+        }
+
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {display: none !important;}
+
+        @media screen {
+            .print-only{
+                display:none;
+            }
+        }
+
+        @media print {
+            .print-not {
+                display:none;
+            }
+
+            body {
+                padding-top: 0px;
+                /* Remove padding for .navbar-fixed-top. */
+            }
+        }
+    </style>
+
+    <style>
+        .dropdown-menu > li {
+            position: relative;
+            -webkit-user-select: none; /* Chrome/Safari */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+ */
+            /* Rules below not implemented in browsers yet */
+            -o-user-select: none;
+            user-select: none;
+            cursor: pointer;
+        }
+
+        .dropdown-menu .sub-menu {
+            left: 100%;
+            position: absolute;
+            top: 0;
+            display: none;
+            margin-top: -1px;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            border-left-color: #fff;
+            box-shadow: none;         
+        }
+
+        .dropdown-menu .sub-menu li a span {
+            position:relative;
+            left:1em;
+        }
+
+        .right-caret:after, .left-caret:after {
+            content: "";
+            border-bottom: 5px solid transparent;
+            border-top: 5px solid transparent;
+            display: inline-block;
+            height: 0;
+            vertical-align: middle;
+            width: 0;
+            margin-left: 5px;
+        }
+
+        .right-caret:after {
+            border-left: 5px solid #ffaf46;
+        }
+
+        .left-caret:after {
+            border-right: 5px solid #ffaf46;
+        }
+    </style>    
+
+    <!-- Bootstrap Modal Theme -->
+    <style>
+        .modal-content {
+            background-color: #5cb85c;
+        }
+        .modal-header {
+            color: #fff;
+        }
+        .modal-body {
+            background-color: #fff;
+        }
+        .modal-footer {
+            background-color: #eeeeee;
+        }
+    </style>
+
+    <asp:ContentPlaceHolder id="head" runat="server">
+
+    </asp:ContentPlaceHolder>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+<form id="form1" runat="server">
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">               
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/admin2014/admin">DFW Webapp</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="http://granitesouthlake.com/admin2014/admin/slabs-promo.aspx">Slabs Promo</a>
+                    </li>
+                    <li>
+                        <a href="http://granitesouthlake.com/admin2014/admin/manage-services.aspx">Services</a>
+                    </li>
+                    <li class="menu-item dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Others <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="http://granitesouthlake.com/admin2014/admin/manage-granite.aspx">Granite</a>
+                            </li>
+                            <li><a href="/admin/Manage-sink.aspx">Sinks</a></li>
+                            <li><a href="/admin/Settings.aspx">Web Default</a></li>
+                            <li><a href="#">Email Notifications</a></li>
+                            
+                            <li style="display:none;"><a href="http://granitesouthlake.com/admin2014/admin/misc.aspx" class="trigger right-caret">Misc</a>
+                                <ul class="dropdown-menu sub-menu">
+                                    <li><a href="#"><span>Lead</span></a></li>
+                                    <li><a href="#"><span>Measurement Assets</span></a></li>
+                                    <li><a href="#"><span>Salesman</span></a></li>
+                                    <li><a href="#"><span>Assigned To's</span></a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/admin/Misc.aspx">[Old Misc Page]</a></li>
+
+                            <li class="divider"></li>
+                            <li><a href="#" id="SlabPromoOnly">Loading promo status...</a></li> 
+                            <li><a class="trigger right-caret">Web Application</a>
+                                <ul class="dropdown-menu sub-menu">
+                                    <li><a href="#" id="mirnot" title="Select this to use the Production System."><span>Loading...</span></a></li>
+                                    <li><a href="#" id="mirsys" title="Select Test System to test the new feature and function on development. This uses the same database as in production."><span>Loading...</span></a></li>
+                                    <li><a href="#" id="mirsysdb" style="color:lightgray;" title="Select Test System to test the new feature and function on development using its own database. Any data changes won't affect those in production."><span>Loading...</span></a></li>
+                                </ul>
+                            </li>      
+                            <li><a href="http://www.granitesouthlake.com/mobile/OnlineQuote/blocklist" target="_blank" >Blocklist</a></li> 
+                                                                             
+                            <li><a class="trigger right-caret"  style="display:none;">Page Templates</a>
+                                <ul class="dropdown-menu sub-menu">
+                                    <li><a href="/admin2014/PageTemplate/index.html"><span>Index</span></a></li>
+                                    <li><a href="/admin2014/PageTemplate/Modals.html"><span>Modals</span></a></li>
+                                    <li><a href="/admin2014/PageTemplate/Portfolio.aspx"><span>Portfolio</span></a></li>
+                                    <li><a href="/admin2014/PageTemplate/Shop-homepage.aspx"><span>Shop Homepage</span></a></li>
+                                    <li><a href="/admin2014/PageTemplate/Shop-item.aspx"><span>Shop Item</span></a></li>
+                                    <li><a href="/admin2014/PageTemplate/Simple-sidebar.aspx"><span>Simple Sidebar</span></a></li>
+                                    <li><a href="/admin2014/PageTemplate/Small-business.aspx"><span>Small Business</span></a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="http://www.granitesouthlake.com/admin2014/admin/fullcalendar231/dfw/install-calendar.aspx">Install Calendar</a>
+                            </li>
+                            <li>
+                                <a href="/admin2014/admin/status-report.aspx">Task Report</a>
+                            </li>
+                            <li>
+                                <a href="/admin2014/admin/sales-report-monthly.aspx">Sales Report</a>
+                            </li>
+<%--                            <li>
+                                <a href="http://www.granitesouthlake.com/admin2014/admin/sales-report-visual.aspx">Visual Sales Data</a>
+                            </li>--%>
+                            <li>
+                                 <a href="/admin/References.aspx?AdminView=true">References</a>
+                            </li>
+                            <li class="nav-divider">
+                            </li>
+                            <li>
+                                <asp:LinkButton ID="EnableCalendarUpdateButton" runat="server" OnClick="EnableCalendarUpdateButton_Click" ToolTip="Enable/Disable update of Google Install Calendar from Webapp"></asp:LinkButton>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="nav-divider"></li>
+                     <UC:UserLog runat="server" ID="UserLogMaster" />                     
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+        <asp:ContentPlaceHolder id="main" runat="server">
+        
+        </asp:ContentPlaceHolder>
+    </div>
+    <!-- /.container -->
+
+</form>
+
+     <!-- Bootstrap Core JavaScript -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <!-- jQuery UI -->
+    <script type="text/javascript" src="//code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+
+    <script>
+            var ROOT = '<%= Request.Url.Scheme + System.Uri.SchemeDelimiter + Request.Url.Host + (Request.Url.IsDefaultPort ? "" : ":" + Request.Url.Port) %>' + '/mobile';
+    </script>
+
+
+    <script type='text/javascript'>
+        $(window).load(function () {
+            $(function () {
+                $(".dropdown-menu > li > a.trigger").on("click", function (e) {
+                    var current = $(this).next();
+                    var grandparent = $(this).parent().parent();
+                    if ($(this).hasClass('left-caret') || $(this).hasClass('right-caret'))
+                        $(this).toggleClass('right-caret left-caret');
+                    grandparent.find('.left-caret').not(this).toggleClass('right-caret left-caret');
+                    grandparent.find(".sub-menu:visible").not(current).hide();
+                    current.toggle();
+                    e.stopPropagation();
+                });
+                $(".dropdown-menu > li > a:not(.trigger)").on("click", function () {
+                    var root = $(this).closest('.dropdown');
+                    root.find('.left-caret').toggleClass('right-caret left-caret');
+                    root.find('.sub-menu:visible').hide();
+                });
+            });
+
+            //SlabPromo Menu
+            $.ajax({
+                url: ROOT + "/OnlineQuote/SlabPromoOnly/",
+                type: "GET",
+            })
+            .done(function (data) {
+                if (data == 'true')
+                {
+                    $('#SlabPromoOnly').data('promo', 0);
+                    $("#SlabPromoOnly").text('Slab Promo Only [Enabled]');
+                    $('#SlabPromoOnly').prop('title', 'Click to disable Slab Promo');
+                }                    
+                else
+                {
+                    $('#SlabPromoOnly').data('promo', 1);
+                    $("#SlabPromoOnly").text('Slab Promo Only [Disabled]');
+                    $('#SlabPromoOnly').prop('title', 'Click to enable Slab Promo');
+                }
+            });
+
+            //TestSystem Menu
+            $.ajax({
+                url: "http://www.granitesouthlake.com/admin2014/admin/usetestsystem.ashx",
+                type: "GET",
+            })
+            .done(function (data) {
+                if (data == 'mirsys') {
+                    $("#mirnot").html('Use Production System');
+                    $("#mirsys").html('<b>Use Test System</b> ✓');
+                    $("#mirsysdb").html('Use Test System and Database');
+                }
+                else if (data == 'mirsysdb') {
+                    $("#mirnot").html('Use Production System');
+                    $("#mirsys").html('Use Test System');
+                    $("#mirsysdb").html('<b>Use Test System and Database</b> ✓');
+                }
+                else {
+                    $("#mirnot").html('<b>Use Production System</b> ✓');
+                    $("#mirsys").html('Use Test System');
+                    $("#mirsysdb").html('Use Test System and Database');
+                }
+            });
+
+        });
+
+        $(document).ready(function () {
+            $("#SlabPromoOnly").on("click", function () {
+                $("#SlabPromoOnly").text('Loading promo status...');
+                $.ajax({
+                    url: ROOT + "/OnlineQuote/SlabPromoOnly/" + $('#SlabPromoOnly').data('promo'),
+                    type: "GET",
+                })
+                .done(function (data) {
+                    if (data == 'true') {
+                        $('#SlabPromoOnly').data('promo', 0);
+                        $("#SlabPromoOnly").text('Slab Promo Only [Enabled]');
+                    }
+                    else {
+                        $('#SlabPromoOnly').data('promo', 1);
+                        $("#SlabPromoOnly").text('Slab Promo Only [Disabled]');
+                    }
+                });
+            });
+
+            $("#mirnot").on("click", function () {
+                $("#mirnot").html('...');
+                $.ajax({
+                    url: "http://www.granitesouthlake.com/admin2014/admin/usetestsystem.ashx?id=mirnot",
+                    type: "GET",
+                })
+                .done(function (data) {
+                    if (data == 'mirnot') {
+                        $("#mirnot").html('<b>Use Production System</b> ✓');
+                        $("#mirsys").html('Use Test System');
+                        $("#mirsysdb").html('Use Test System and Database');
+                    }
+                });
+            });
+
+            $("#mirsys").on("click", function () {
+                $("#mirsys").html('...');
+                $.ajax({
+                    url: "http://www.granitesouthlake.com/admin2014/admin/usetestsystem.ashx?id=mirsys",
+                    type: "GET",
+                })
+                .done(function (data) {
+                    if (data == 'mirsys') {
+                        $("#mirnot").html('Use Production System');
+                        $("#mirsys").html('<b>Use Test System</b> ✓');
+                        $("#mirsysdb").html('Use Test System and Database');
+                    }
+                });
+            });
+
+            $("#mirsysdb").on("click", function () {
+                $("#mirsysdb").html('...');
+                $.ajax({
+                    url: "http://www.granitesouthlake.com/admin2014/admin/usetestsystem.ashx?id=mirsysdb",
+                    type: "GET",
+                })
+                .done(function (data) {
+                    if (data == 'mirsysdb') {
+                        $("#mirnot").html('Use Production System');
+                        $("#mirsys").html('Use Test System');
+                        $("#mirsysdb").html('<b>Use Test System and Database</b> ✓');
+                    }
+                });
+            });
+
+        });
+    </script>
+
+    <asp:ContentPlaceHolder id="postformtag" runat="server">
+    </asp:ContentPlaceHolder>
+
+</body>
+</html>

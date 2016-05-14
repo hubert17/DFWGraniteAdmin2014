@@ -1,0 +1,5 @@
+Creating CRUD Pages
+
+1. Setup database
+2. Add Gridview, enable selection
+3. Add Formview, enable CRUD, set Where clause, Databind gridview on crud Events, Disable rendering as Table

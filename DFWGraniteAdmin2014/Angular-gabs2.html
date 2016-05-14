@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+<html data-ng-app="myNgApp">
+<head>
+    <title>Customer App | AshishBlog</title>
+    <script src="http://code.angularjs.org/1.0.6/angular.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <link type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        #mydiv {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            background-color: grey;
+            opacity: .8;
+        }
+
+        .ajax-loader {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -32px; /* -1 * image width / 2 */
+            margin-top: -32px; /* -1 * image height / 2 */
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div data-ng-controller="myController" class="container">
+        <div class="alert-danger alert-dismissable">{{ error }}</div>
+        <div data-ng-show="loading">
+            <img src="Images/482.gif" class="ajax-loader" />
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Edge</th>
+                        <th>Price</th>
+                        <th>Image Filename</th>
+                        <th>Inactive</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="edge in myModelS | filter:search">
+                        <td><strong data-ng-hide="lead.editMode">{{ edge.EdgeID }}</strong></td>
+
+                        <td>
+                            <p data-ng-hide="edge.editMode">{{ edge.EdgeName }}</p>
+                            <p data-ng-show="edge.editMode">
+                                <input type="text" data-ng-model="edge.EdgeName" />
+                            </p>
+                        </td>
+                        <td>
+                            <p data-ng-hide="edge.editMode">{{ edge.Price }}</p>
+                            <input data-ng-show="edge.editMode" type="text" data-ng-model="edge.Price" />
+                        </td>
+                        <td>
+                            <p data-ng-hide="edge.editMode">{{ edge.ImageFilename }}</p>
+                            <p data-ng-show="edge.editMode">
+                                <input type="text" data-ng-model="edge.ImageFilename" />
+                            </p>
+                        </td>
+                        <td></td>
+
+                        <td>
+                            <p data-ng-hide="edge.editMode"><a data-ng-click="toggleEdit(edge)" href="javascript:;">Edit</a> | <a data-ng-click="deleteModelData(edge)" href="javascript:;">Delete</a></p>
+                            <p data-ng-show="edge.editMode"><a data-ng-click="save(edge)" href="javascript:;">Save</a> | <a data-ng-click="toggleEdit(edge)" href="javascript:;">Cancel</a></p>
+                        </td>
+
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+    <script>
+        var app = angular.module('myNgApp', []);
+        //var url = '/api/edge';
+        var url = 'http://www.granitesouthlake.com/WebApiDFW/api/edge';
+
+
+        app.factory('myFactory', function ($http) {
+            return {
+                getModelData: function () {
+                    return $http.get(url);
+                },
+                addModelData: function (edge) {
+                    return $http.post(url, edge);
+                },
+                deleteModelData: function (edge) {
+                    return $http.delete(url + edge.EdgeID);
+                },
+                updateModelData: function (edge) {
+                    return $http.put(url + edge.EdgeID, edge);
+                }
+            };
+        });
+
+        app.controller('myController', function PostsController($scope, myFactory) {
+            $scope.myModelS = [];
+            $scope.loading = true;
+            $scope.addMode = false;
+
+            $scope.toggleEdit = function () {
+                this.edge.editMode = !this.edge.editMode;
+            };
+            $scope.toggleAdd = function () {
+                $scope.addMode = !$scope.addMode;
+            };
+            $scope.save = function () {
+                $scope.loading = true;
+                var thisModel = this.edge;
+                myFactory.updateModelData(thisModel).success(function (data) {
+                    alert("Saved Successfully!!");
+                    thisModel.editMode = false;
+                    $scope.loading = false;
+                }).error(function (data) {
+                    $scope.error = "An Error has occured while Saving edge! " + data.ExceptionMessage;
+                    $scope.loading = false;
+
+                });
+            };
+
+
+            // add edge
+            $scope.add = function () {
+                $scope.loading = true;
+                myFactory.addModelData(this.myNewModel).success(function (data) {
+                    alert("Added Successfully!!");
+                    $scope.addMode = false;
+                    $scope.myModelS.push(data);
+                    $scope.loading = false;
+                }).error(function (data) {
+                    $scope.error = "An Error has occured while Adding edge! " + data.ExceptionMessage;
+                    $scope.loading = false;
+
+                });
+            };
+            // delete edge
+            $scope.deleteModelData = function () {
+                $scope.loading = true;
+                var currentModel = this.edge;
+                myFactory.deleteModelData(currentModel).success(function (data) {
+                    alert("Deleted Successfully!!");
+                    $.each($scope.myModelS, function (i) {
+                        if ($scope.myModelS[i].EdgeID === currentModel.EdgeID) {
+                            $scope.myModelS.splice(i, 1);
+                            return false;
+                        }
+                    });
+                    $scope.loading = false;
+                }).error(function (data) {
+                    $scope.error = "An Error has occured while Saving edge! " + data.ExceptionMessage;
+                    $scope.loading = false;
+
+                });
+            };
+
+            //get all myModelS
+            myFactory.getModelData().success(function (data) {
+                $scope.myModelS = data;
+                $scope.loading = false;
+            })
+            .error(function (data) {
+                $scope.error = "An Error has occured while loading posts! " + data.ExceptionMessage;
+                $scope.loading = false;
+            });
+
+        });
+    </script>
+</body>
+</html>

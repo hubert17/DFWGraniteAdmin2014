@@ -1,0 +1,180 @@
+﻿<!DOCTYPE html>
+<html data-ng-app="myNgApp">
+<head>
+    <title>Customer App | AshishBlog</title>
+    <script src="http://code.angularjs.org/1.0.6/angular.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <link type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        #mydiv {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            background-color: grey;
+            opacity: .8;
+        }
+
+        .ajax-loader {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -32px; /* -1 * image width / 2 */
+            margin-top: -32px; /* -1 * image height / 2 */
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div data-ng-controller="myController" class="container">
+        <h2>Customers</h2>
+        <strong class="error">{{ error }}</strong>
+        <div id="mydiv" data-ng-show="loading">
+            <img src="Images/482.gif" class="ajax-loader" />
+        </div>
+        <p data-ng-hide="addMode"><a data-ng-click="toggleAdd()" href="javascript:;" class="btn btn-primary">Add New</a></p>
+        <form name="addCustomer" data-ng-show="addMode" style="width: 600px; margin: 0px auto;">
+            <label>Name:</label><input type="text" data-ng-model="newcustomer.CustomerLastName" required />
+            <label>Email:</label><input type="email" data-ng-model="newcustomer.Email" required />
+            <br />
+            <span class="error" data-ng-show="addCustomer.$error.email">Invalid Email format!</span>
+            <br />
+            <input type="submit" value="Add" data-ng-click="add()" data-ng-disabled="!addCustomer.$valid" class="btn btn-primary" />
+            <input type="button" value="Cancel" data-ng-click="toggleAdd()" class="btn btn-primary" />
+            <br />
+            <br />
+        </form>
+        <table class="table table-bordered table-hover" style="width: 800px">
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input type="text" data-ng-model="search.CustomerLastName" />
+                </td>
+                <td>
+                    <input type="text" data-ng-model="search.Email" />
+                </td>
+                <td></td>
+            </tr>
+
+            <tr data-ng-repeat="customer in myModelS | filter:search">
+                <td><strong data-ng-hide="customer.editMode">{{ customer.OnlineQuoteID }}</strong></td>
+                <td>
+                    <p data-ng-hide="customer.editMode">{{ customer.CustomerLastName }}</p>
+                    <p data-ng-show="customer.editMode">
+                        <input type="text" data-ng-model="customer.CustomerLastName" />
+                    </p>
+                </td>
+                <td>
+                    <p data-ng-hide="customer.editMode">{{ customer.Email }}</p>
+                    <input data-ng-show="customer.editMode" type="text" data-ng-model="customer.Email" />
+                </td>
+                <td>
+                    <p data-ng-hide="customer.editMode"><a data-ng-click="toggleEdit(customer)" href="javascript:;">Edit</a> | <a data-ng-click="deleteModelData(customer)" href="javascript:;">Delete</a></p>
+                    <p data-ng-show="customer.editMode"><a data-ng-click="save(customer)" href="javascript:;">Save</a> | <a data-ng-click="toggleEdit(customer)" href="javascript:;">Cancel</a></p>
+                </td>
+            </tr>
+        </table>
+        <hr />
+    </div>
+    <script>
+        var app = angular.module('myNgApp', []);
+        var url = 'http://www.granitesouthlake.com/WebApiDFW/api/customer/';
+
+        app.factory('myFactory', function ($http) {
+            return {
+                getModel: function () {
+                    return $http.get(url);
+                },
+                addModel: function (customer) {
+                    return $http.post(url, customer);
+                },
+                deleteModel: function (customer) {
+                    return $http.delete(url + customer.OnlineQuoteID);
+                },
+                updateModel: function (customer) {
+                    return $http.put(url + customer.OnlineQuoteID, customer);
+                }
+            };
+        });
+
+        app.controller('myController', function PostsController($scope, myFactory) {
+            $scope.myModelS = [];
+            $scope.loading = true;
+            $scope.addMode = false;
+
+            $scope.toggleEdit = function () {
+                this.customer.editMode = !this.customer.editMode;
+            };
+            $scope.toggleAdd = function () {
+                $scope.addMode = !$scope.addMode;
+            };
+            $scope.save = function () {
+                $scope.loading = true;
+                var thisModel = this.customer;
+                myFactory.updateModel(thisModel).success(function (data) {
+                    alert("Saved Successfully!!");
+                    thisModel.editMode = false;
+                    $scope.loading = false;
+                }).error(function (data) {
+                    $scope.error = "An Error has occured while Saving customer! " + data.ExceptionMessage;
+                    $scope.loading = false;
+
+                });
+            };
+
+            // add Customer
+            $scope.add = function () {
+                $scope.loading = true;
+                myFactory.addModel(this.newModel).success(function (data) {
+                    alert("Added Successfully!!");
+                    $scope.addMode = false;
+                    $scope.myModelS.push(data);
+                    $scope.loading = false;
+                }).error(function (data) {
+                    $scope.error = "An Error has occured while Adding customer! " + data.ExceptionMessage;
+                    $scope.loading = false;
+
+                });
+            };
+            // delete Customer
+            $scope.deleteModelData = function () {
+                $scope.loading = true;
+                var currentModel = this.customer;
+                myFactory.deleteModelData(currentModel).success(function (data) {
+                    alert("Deleted Successfully!!");
+                    $.each($scope.myModelS, function (i) {
+                        if ($scope.myModelS[i].OnlineQuoteID === currentModel.OnlineQuoteID) {
+                            $scope.myModelS.splice(i, 1);
+                            return false;
+                        }
+                    });
+                    $scope.loading = false;
+                }).error(function (data) {
+                    $scope.error = "An Error has occured while Saving customer! " + data.ExceptionMessage;
+                    $scope.loading = false;
+
+                });
+            };
+
+            //get all Customers
+            myFactory.getModel().success(function (data) {
+                $scope.myModelS = data;
+                $scope.loading = false;
+            })
+            .error(function (data) {
+                $scope.error = "An Error has occured while loading posts! " + data.ExceptionMessage;
+                $scope.loading = false;
+            });
+
+        });
+    </script>
+</body>
+</html>

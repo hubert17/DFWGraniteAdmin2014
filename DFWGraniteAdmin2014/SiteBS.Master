@@ -1,0 +1,182 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SiteBS.master.cs" Inherits="DFWGraniteAdmin2014.SiteBS" %>
+<%@ Register TagPrefix="UC" TagName="UserLogBS" Src="~/UserControl/UserLogBS.ascx" %>
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head runat="server">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title><%: Page.Title %> | DFW Wholesale Granite Webapp</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+
+    <!-- Custom CSS -->
+    <link href="/admin2014/css/sb-admin.css" rel="stylesheet"/>
+
+    <!-- Custom Fonts -->
+    <link href="/admin2014/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Custom CSS -->       
+
+    <!-- jQuery Version 1.11.0 -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+    <style>
+            @media screen {
+            .print-only{
+                display:none;
+            }
+        }
+
+        @media print {
+            .print-not {
+                display:none;
+            }
+
+            body {
+                padding-top: 0px;
+                /* Remove padding for .navbar-fixed-top. */
+            }
+        }
+    </style>
+
+
+    <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+
+    </asp:ContentPlaceHolder>
+
+</head>
+
+<body>
+<form id="form2" runat="server">
+
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">                 
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/admin2014/">DFW Webapp</a>
+            </div>
+            <!-- Top Menu Items -->
+            <ul class="nav navbar-right top-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope"></i> <b class="caret"></b></a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
+                </li>
+                <li class="dropdown">
+                    <UC:UserLogBS runat="server" ID="UserLogBS1" /> 
+                </li>
+            </ul>
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav side-nav">
+                    <li class="active">
+                        <a href="/admin/Manage-granite.aspx"><i class="fa fa-fw fa-dashboard"></i> Granite</a>
+                    </li>
+                    <li>
+                        <a href="/admin/Manage-services.aspx"><i class="fa fa-fw fa-bar-chart-o"></i> Services</a>
+                    </li>
+                    <li>
+                        <a href="/admin/Manage-sink.aspx"><i class="fa fa-fw fa-table"></i> Sinks</a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#reports"><i class="fa fa-fw fa-arrows-v"></i> Reports <i class="fa fa-fw fa-caret-down"></i></a>
+                        <ul id="reports" class="collapse">
+                            <li>
+                                <a href="/admin/CalendarInstall.aspx">Install Calendar</a>
+                            </li>
+                            <li>
+                                <a href="/admin2014/admin/status-report.aspx">Job Status Report</a>
+                            </li>
+                            <li>
+                                <a href="/admin2014/admin/sales-report-monthly.aspx">Sales Report</a>
+                            </li>
+                            <li>
+                                <a href="/admin/References.aspx?AdminView=true">References</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/admin2014/admin/misc.aspx" data-toggle="collapse" data-target="#misc"><i class="fa fa-fw fa-arrows-v"></i> Misc <i class="fa fa-fw fa-caret-down"></i></a>
+                        <ul id="misc" class="collapse">
+                            <li>
+                                <a href="#">Lead</a>
+                            </li>
+                            <li>
+                                <a href="#">Measurement Assets</a>
+                            </li>
+                            <li>
+                                <a href="#">Salesman</a>
+                            </li>
+                            <li>
+                                <a href="#">Assigned To's</a>
+                            </li>
+                            <li>
+                                <a href="#">Email Notifications</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/admin2014/admin/weekend-specials.aspx"><i class="fa fa-fw fa-file"></i> Weekend Specials</a>
+                    </li>
+                    <li>
+                        <a href="/admin/Settings.aspx"><i class="fa fa-fw fa-edit"></i> Web Default</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+
+        <div id="page-wrapper">
+
+            <div class="container-fluid">
+                <asp:ContentPlaceHolder id="ContentPlaceHolder2" runat="server">
+        
+                </asp:ContentPlaceHolder>
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+
+</form>
+
+<asp:ContentPlaceHolder id="ContentPlaceHolder3" runat="server">
+</asp:ContentPlaceHolder>
+
+     <!-- Bootstrap Core JavaScript -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <!-- jQuery UI -->
+    <script type="text/javascript" src="//code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
+
+</body>
+</html>

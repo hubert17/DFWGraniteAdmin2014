@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <!-- /#page-wrapper -->
+    <!-- JavaScript -->
+    <link rel="stylesheet" href="http://cdn.oesmith.co.uk/morris-0.4.3.min.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="http://cdn.oesmith.co.uk/morris-0.4.3.min.js"></script>
+
+    <title>Morris.js Area Chart Example</title>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            Morris.Area({
+                element: 'area-example',
+                data: Graph(),
+                xkey: 'label',
+                ykeys: ['value', 'value2'],
+                labels: ['value', 'value2']
+            });
+
+        });
+
+        function Graph() {
+            var data = "";
+
+            $.ajax({
+                type: 'GET',
+                url: "http://localhost:60539/GraphHandler.ashx",
+                dataType: 'json',
+                async: false,
+                contentType: "application/json; charset=utf-8",
+                data: { 'GraphName': 'line' },
+                success: function (result) {
+                    data = result;
+                },
+                error: function (xhr, status, error) {
+                    alert(error);
+                }
+            });
+
+            return data;
+        }
+    </script>
+</head>
+<body>
+        <div id="area-example"></div>
+        <button id="run">Create 2nd Chart</button>
+        <br />
+</body>
+</html>
